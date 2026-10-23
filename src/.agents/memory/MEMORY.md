@@ -1,0 +1,2 @@
+- [Clerk proxy dependency](clerk-proxy-dependency.md) — avoid reintroducing the middleware package until its vulnerable transitive dependency is fixed.
+- [Nexora account modes](nexora-account-modes.md) — one Clerk identity can use personal and company workspaces; company permissions come from server-side membership.
