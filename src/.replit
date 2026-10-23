@@ -1,0 +1,56 @@
+modules = ["nodejs-24", "postgresql-16"]
+run = "bash scripts/replit-dev.sh"
+
+[agent]
+stack = "PNPM_WORKSPACE"
+expertMode = true
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Nexora"
+
+[[workflows.workflow]]
+name = "Nexora"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "bash scripts/replit-dev.sh"
+waitForPort = 8080
+
+[deployment]
+deploymentTarget = "autoscale"
+build = ["bash", "scripts/replit-build.sh"]
+run = ["bash", "scripts/replit-start.sh"]
+
+[deployment.postBuild]
+args = ["pnpm", "store", "prune"]
+env = { "CI" = "true" }
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 20000
+
+[[ports]]
+localPort = 8080
+externalPort = 80
+
+[[ports]]
+localPort = 22019
+externalPort = 3000
+
+[nix]
+channel = "stable-25_05"
+
+[userenv]
+
+[userenv.production]
+NEXORA_COMPANY_ADMIN_RECOVERY = "{\"companyId\":\"c907974b-599b-49e4-ada0-6b6f80996fdd\",\"expectedOwnerFingerprint\":\"13e3f972dacd4bce2ce1114aa7e6fb25\",\"administratorEmail\":\"estima3436@gmail.com\"}"
