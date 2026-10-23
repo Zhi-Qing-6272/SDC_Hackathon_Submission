@@ -1,0 +1,26 @@
+.gm-bar{height:10px;background:#E2E8F0;border-radius:99px;overflow:hidden}
+.gm-bar i{display:block;height:100%;background:linear-gradient(90deg,#4F46E5,#06B6D4);border-radius:99px;transition:width .5s ease}
+.gm-bar.done i{background:linear-gradient(90deg,#059669,#34D399)}
+.gm-bar.thin{height:6px}
+.gm-top{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
+.gm-level{width:62px;height:62px;border-radius:18px;background:linear-gradient(135deg,#4F46E5,#06B6D4);color:#fff;display:grid;place-items:center;text-align:center;line-height:1.05}
+.gm-level b{font-size:22px;display:block}.gm-level small{font-size:9px;letter-spacing:.08em;text-transform:uppercase;opacity:.9}
+.gm-meta{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:#475569;margin:7px 0 4px;flex-wrap:wrap}
+.gm-meta b{color:#0F172A}
+.gm-rows{display:grid;gap:12px;margin-top:14px}
+.gm-next{font-size:12px;color:#3730A3;background:#EEF2FF;border-radius:10px;padding:9px 11px;margin-top:12px}
+.gm-badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:10px;margin-top:12px}
+.gm-badge{border:1px solid #E2E8F0;border-radius:14px;padding:12px;display:grid;gap:7px;background:#fff}
+.gm-badge.on{border-color:#A5B4FC;background:linear-gradient(180deg,#EEF2FF,#fff)}
+.gm-badge.off{opacity:.78}
+.gm-ico{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:#F1F5F9;color:#94A3B8}
+.gm-badge.on .gm-ico{background:linear-gradient(135deg,#F59E0B,#F97316);color:#fff}
+.gm-badge b{font-size:13px;color:#0F172A}.gm-badge small{font-size:11px;color:#64748B;line-height:1.35}
+.gm-badge em{font-style:normal;font-size:10.5px;font-weight:700;color:#475569}
+.gm-badge.on em{color:#B45309}
+.gm-toast{display:flex;gap:10px;align-items:center;background:#FFFBEB;border:1px solid #FCD34D;border-radius:12px;padding:11px 14px;margin-bottom:14px;font-size:13px;color:#78350F}
+.gm-toast button{margin-left:auto;background:none;border:0;font-size:18px;cursor:pointer;color:#92400E}
+.gm-mini{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.gm-mini span{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:#F1F5F9;color:#CBD5E1}
+.gm-mini span.on{background:linear-gradient(135deg,#F59E0B,#F97316);color:#fff}
+.dc-card.is-done{border-color:#86EFAC;background:#F0FDF4}

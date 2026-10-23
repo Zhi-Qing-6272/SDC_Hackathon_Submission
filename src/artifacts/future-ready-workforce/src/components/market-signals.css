@@ -1,0 +1,6 @@
+.ms-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.ms-stats .panel{padding:14px}.ms-stats b{font-size:18px}
+.ms-row{display:grid;grid-template-columns:150px 1fr 120px;gap:12px;align-items:center;font-size:13px;margin:7px 0}
+.ms-track{background:#F1F5F9;border-radius:99px;height:10px;overflow:hidden}.ms-track i{display:block;height:100%;background:#4F46E5;border-radius:99px}
+.ms-row b{text-align:right}.ms-row small{color:#64748B;font-weight:500}
+@media(max-width:600px){.ms-row{grid-template-columns:100px 1fr 90px}}

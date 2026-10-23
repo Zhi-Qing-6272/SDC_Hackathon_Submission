@@ -1,0 +1,47 @@
+.team-member-form h2{margin-bottom:12px}
+.team-member-form select{width:100%;min-width:0;border:1px solid #E2E8F0;border-radius:9px;padding:11px 12px;background:#FFFFFF;color:#0F1B2D;font-size:12px}
+.team-consent{display:flex;align-items:flex-start;gap:10px;margin-top:18px;font-size:12px;color:#334155;line-height:1.6}
+.team-consent input{margin-top:4px;accent-color:#0F1B2D}
+.team-form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+.team-records{display:grid;margin-top:12px}
+.team-record{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;border-top:1px solid #E2E8F0;padding:16px 0}
+.team-record h3{font-size:15px;margin:0 0 6px}
+.team-record p{font-size:12px;color:#334155;line-height:1.6;margin:4px 0}
+.team-record-actions{display:flex;gap:7px}
+.team-table-wrap{overflow:auto;margin-top:18px;max-width:100%}
+.team-skills-table{width:100%;border-collapse:collapse;text-align:left;font-size:11px}
+.team-skills-table th,.team-skills-table td{padding:9px;border-bottom:1px solid #E2E8F0;min-width:95px}
+.team-skills-table th:first-child{min-width:140px}
+.team-skills-table thead th{color:#334155;white-space:nowrap}
+.matrix-cell{display:block;padding:7px;border-radius:5px;text-align:center;background:#F1F5F9;color:#334155}
+.matrix-cell.listed{background:#D1FAE5;color:#047857}
+.matrix-cell.missing{background:#FEE2E2;color:#B91C1C}
+.shared-plan{padding-left:20px;margin-top:14px}
+.shared-plan li{padding:12px 4px;border-bottom:1px solid #E2E8F0}
+.shared-plan li::marker{font-family:var(--font-mono);font-size:10px;color:#64748B}
+.shared-plan h3{font-size:13px;margin-bottom:6px}
+.shared-plan p{font-size:11px;line-height:1.6;color:#64748B}
+.shared-plan a{color:#0F1B2D;display:inline-flex;padding:7px}
+.shared-plan li>div{display:inline-block;vertical-align:middle;max-width:calc(100% - 35px)}
+@media(max-width:680px){.team-record-actions{flex-direction:column}.team-skills-table th,.team-skills-table td{min-width:85px;padding:7px}.team-form-actions{flex-wrap:wrap}}
+
+.tm-form{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:10px}
+.tm-form .field{flex:1;min-width:210px;margin:0}.tm-form .field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px;color:#334155}
+.tm-form .dc-input,.tm-form .og-select,.panel .field>select.og-select{width:100%;min-width:0}
+.tm-sub{font-size:13px;margin:18px 0 6px}
+.tm-list{display:grid;gap:8px;margin-top:6px}
+.tm-row,.tm-invite{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;border:1px solid #E2E8F0;border-radius:10px;padding:10px 12px;background:#fff}
+.tm-invite{margin-top:10px}.tm-invite h3{font-size:14px;margin:0 0 4px}.tm-invite p{font-size:12px;margin:2px 0;color:#334155}
+.tm-row b{font-size:13px;margin-right:8px}.tm-row small{display:block;font-size:11px;color:#64748B;margin-top:2px}
+.tm-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tm-chip{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:4px}
+.tm-pending{background:#FEF3C7;color:#92400E}.tm-declined{background:#FEE2E2;color:#991B1B}.tm-expired{background:#E2E8F0;color:#475569}.tm-owner{background:#E0E7FF;color:#3730A3}
+.tm-link{margin-top:12px;padding:12px;border:1px solid #FCD34D;background:#FFFBEB;border-radius:10px;font-size:12px}
+.tm-link p{margin:4px 0 8px;color:#475569}
+.tm-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}.tm-tabs .jc-chip.on{background:#4F46E5;color:#fff;border-color:#4F46E5}
+.inv{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:#F8FAFC}
+.inv-card{width:100%;max-width:520px;background:#fff;border:1px solid #E2E8F0;border-radius:16px;padding:28px;box-shadow:0 12px 32px rgba(15,27,45,.08);display:grid;gap:12px}
+.inv-card h1{font-size:21px;margin:0;color:#0F172A}.inv-card p{font-size:13.5px;line-height:1.6;color:#334155;margin:0}
+.inv-brand{font-weight:800;color:#4F46E5;letter-spacing:.02em}
+.inv-box{border:1px solid #E2E8F0;background:#F8FAFC;border-radius:10px;padding:12px 14px;font-size:13px;color:#334155}.inv-box ul{margin:4px 0 8px;padding-left:18px}.inv-box p{font-size:12px;margin-top:6px}
+.inv-card .primary-button,.inv-card .outline-button{text-decoration:none}
