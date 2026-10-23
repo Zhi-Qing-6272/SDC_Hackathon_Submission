@@ -22,249 +22,252 @@ AI-powered career readiness and reskilling platform serves working adults, fresh
 | Demo video              | https://youtu.be/6ILReXxpRDg                                                       |
 
 
-# Nexora — source code
+## Overview
 
-This archive contains Nexora's current web frontend, Express API, PostgreSQL
-schema, OpenAPI contract, generated API clients, shared packages, and workspace
-configuration. The internal package and folder names remain
-`future-ready-workforce` so existing imports and routing continue to work.
+### Problem
 
-## Included
+AI is changing job requirements faster than training programmes and skills frameworks can keep up. In Malaysia, 56% of professionals already use AI tools at work, yet only 26% have received formal training (Hays Asia Salary Guide 2025), and the Ministry of Science, Technology and Innovation estimates that more than 600,000 workers will need reskilling within three to five years. Workers lack awareness of which jobs and skills are rising or declining, and personalised, affordable reskilling guidance is hard to find. Employers face the same gap: they cannot easily see which skills their teams are missing or what training to plan.
 
-- `artifacts/future-ready-workforce/` — React, TypeScript, Vite, CSS, and public assets.
-- `artifacts/api-server/` — Express API, authentication middleware, market signals,
-  and account-owned workspace endpoints.
-- `lib/db/` — Drizzle schema and PostgreSQL access.
-- `lib/api-spec/` — OpenAPI contract and code generation configuration.
-- `lib/api-client-react/` and `lib/api-zod/` — generated clients and validators.
-- Workspace package manifests, lockfile, TypeScript configuration, and scripts.
+### Solution
 
-## Requirements
+Nexora is a web-based career and workforce planning platform that takes a person from "who I am today" to "where I can be in the AI era":
 
-- Node.js 24 and pnpm compatible with the included lockfile.
-- PostgreSQL.
-- Your own configured Clerk application, or Clerk provisioned in your Replit project.
+1. Users build a skills profile by uploading a CV, pasting their experience or answering a short questionnaire. The CV is read in the browser and never uploaded.
+2. Nexora pulls live job postings from the Himalayas remote-jobs API and turns them into skill-demand signals, always shown with their source and date. US Bureau of Labor Statistics (BLS) occupational data adds projected job growth and median pay for each role.
+3. Each future role gets an explainable match score (70% skills, 30% interests), a list of matched skills and a clear skills gap. Real vacancies are matched to the profile too.
+4. Users get an ordered learning plan with estimated hours, free or low-cost course links and progress tracking, with each role and skill linked to the UN Sustainable Development Goals.
 
-Configure these variables using your environment's secret manager:
+Nexora is designed to **support** human career decisions, not replace them. Every signal cites its source, predictions are labelled as estimates, several future scenarios are shown side by side, and name, age, gender and background are never used for matching. An optional AI Help chat (Google Gemini or Anthropic Claude) answers questions, but the matching, scoring and pathways themselves are transparent, rule-based calculations, so the system cannot invent jobs, courses or statistics.
 
-- `DATABASE_URL` — database connection.
-- `CLERK_SECRET_KEY` — server-side Clerk key.
-- `CLERK_PUBLISHABLE_KEY` — Clerk publishable key.
-- `VITE_CLERK_PUBLISHABLE_KEY` — matching frontend publishable key.
+### Key Features
 
-No real variable values or credentials are included. Do not commit secret files.
-An existing Clerk application's users are not copied into this archive.
+- **Skills profile intake** — Upload a CV (.docx, .txt or .md), paste text or answer a questionnaire; skills and interests are extracted in the browser, and the user chooses which to keep.
+- **Live job-market signal layer** — Server-side client for the [Himalayas remote-jobs API](https://himalayas.app/docs/remote-jobs-api), cached for 6 hours with a last-good-snapshot fallback. The Market signals page shows the top in-demand skills with source name, link and fetch date.
+- **Explainable future-role matching** — 21 career directions (from Data Analyst and Cybersecurity Analyst to Sustainability/Clean-energy Analyst and Agri-tech Data Specialist) ranked by match score, with matched skills and missing skills listed for each.
+- **Vacancy matching** — Live Himalayas postings ranked against the profile, showing matched and missing skills, with every apply button linking to the employer's own application page.
+- **Possible futures (handling uncertainty)** — The same profile is re-ranked under five scenarios: *Gradual change*, *Faster change*, *Routine tasks automated*, *AI-driven build-out* and *Cautious hiring*. Each scenario weights skills, interests, live demand and AI exposure differently, and all results are labelled as planning estimates.
+- **AI risk to jobs and pay** — BLS Occupational Outlook Handbook figures (projected employment change 2025–35 and median pay) matched to each direction, with links to the BLS source.
+- **Personalised reskilling pathway** — Step-by-step plan for the chosen direction with provider, estimated hours, cost label (free / provider pricing varies) and course links (Khan Academy, Kaggle Learn, Microsoft Learn, HubSpot Academy, Salesforce Trailhead, AWS Skill Builder, OpenLearn, Coursera and more). Progress is saved to the user's account.
+- **SDG mapping** — Roles and skills are tagged to SDGs (for example SQL → SDG 4, 8, 9; Process improvement → SDG 8, 9, 12) with full official labels, and a disclosure that tags are associations, not measured impact.
+- **Progress, levels and badges** — Progress bar, XP level and ten badges to keep learners motivated.
+- **Company workspace (HR view)** — Companies register, invite employees with a join code and define teams and required skills. A skill-gap ranking and team-by-skill matrix show where training is needed, and administrators recommend online training. Employees decide whether to share their data, and sharing is off by default.
+- **Learning teams** — Users create a team and invite others by email to reskill together. Invitations use hashed tokens, require a verified email and expire after 7 days.
+- **AI Help chat** — A Help button on every page, powered by Google Gemini (free tier) or Anthropic Claude with optional web search and source links. Without an API key it falls back to built-in answers in English, Bahasa Malaysia and Chinese.
+- **Multi-language** — The administrator workspace and Help chat are available in English, Bahasa Malaysia and Chinese (Simplified).
 
-**Step-by-step local setup (PostgreSQL + Clerk): see `LOCAL_SETUP.md` and `.env.example`.**
+### Tech Stack
 
-## Install and check
+| Layer           | Technology                                                                                 |
+| --------------- | ------------------------------------------------------------------------------------------ |
+| Frontend        | React 19, TypeScript 5.9, Vite 7, Tailwind CSS 4, Radix UI / shadcn components, TanStack Query, Wouter |
+| Backend         | Node.js 24, Express 5, REST API defined in OpenAPI (Orval-generated React Query client and Zod validators), Pino logging, Nodemailer |
+| Database        | PostgreSQL 16 with Drizzle ORM                                                              |
+| Authentication  | Clerk (email + password, email verification codes for password reset)                     |
+| Data sources    | Himalayas remote-jobs API (live postings), US BLS Occupational Outlook Handbook (job growth and pay) |
+| AI              | Optional Google Gemini (`gemini-flash-latest`) or Anthropic Claude (`claude-haiku-5-5`) for the Help chat |
+| AI / Compute    | RunPod (GPU) — *see [How We Use RunPod](#how-we-use-runpod-required)*                      |
+| Hosting / Dev   | Replit (development and Autoscale deployment)                                              |
+| Tooling         | pnpm workspaces (monorepo), esbuild, Node test runner                                      |
 
-From the extracted project root:
+---
 
-```sh
+## Project Structure
+
+```
+.
+├── artifacts/
+│   ├── future-ready-workforce/          # Web app (React + Vite). Internal name kept for imports/routing
+│   │   ├── src/
+│   │   │   ├── App.tsx                  # App shell, routing, overview, profile, pathway & SDG mapping
+│   │   │   ├── components/
+│   │   │   │   ├── discover.tsx         # CV / text / questionnaire intake, direction & vacancy matching
+│   │   │   │   ├── market-signals.tsx   # Himalayas skill-demand signals with source and date
+│   │   │   │   ├── futures.tsx          # Possible-futures scenarios and AI risk to jobs and pay
+│   │   │   │   ├── pathway.tsx          # Personalised reskilling pathway and progress
+│   │   │   │   ├── gamify.tsx           # Levels, XP and badges
+│   │   │   │   ├── admin-shell.tsx      # Company administrator workspace
+│   │   │   │   ├── admin-pages.tsx      # Overview, Skill gaps, Teams, Training, Employees, Company details
+│   │   │   │   ├── team-manager.tsx     # Learning teams and invitations
+│   │   │   │   ├── support-chat.tsx     # AI Help chat
+│   │   │   │   └── ui/                  # shadcn/Radix UI components
+│   │   │   └── lib/
+│   │   │       ├── discovery.ts         # Skill extraction, 21 directions, match scores, scenarios
+│   │   │       ├── ai-risk.ts           # BLS occupation data and AI-exposure rules
+│   │   │       ├── sdg.ts               # Official SDG labels
+│   │   │       ├── training-catalog.ts  # Curated training providers
+│   │   │       ├── achievements.ts      # Badge and level logic
+│   │   │       └── admin-dict.ts        # EN / BM / ZH translations for the admin workspace
+│   │   ├── tests/                       # Workspace-routing unit tests
+│   │   └── vite.config.ts
+│   └── api-server/                      # Express API
+│       ├── src/
+│       │   ├── routes/                  # health, trends, vacancies, market, workspace, org, teams, support
+│       │   ├── lib/                     # himalayas.ts, market-stats.ts, mailer.ts, support-faq.ts, synthetic-data.ts
+│       │   └── middlewares/             # Clerk proxy middleware
+│       ├── tests/                       # Unit and integration tests
+│       └── build.mjs                    # esbuild bundle
+├── lib/
+│   ├── db/                              # Drizzle schema + PostgreSQL access (drizzle-kit push)
+│   ├── api-spec/                        # OpenAPI contract + Orval code-generation config
+│   ├── api-client-react/                # Generated React Query client
+│   └── api-zod/                         # Generated Zod validators
+├── scripts/                             # Replit run / build / start scripts
+├── .env.example                         # Example environment variables
+├── .replit                              # Replit run and deployment configuration
+├── LOCAL_SETUP.md                       # Local setup guide (PostgreSQL, Clerk, Supabase)
+├── REPLIT_SETUP.md                      # Replit setup guide (Secrets, Run, Autoscale)
+├── package.json                         # Workspace root (pnpm only)
+├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
+└── README.md
+```
+
+### Architecture
+
+```
+                         ┌──────────────────────────────────────────┐
+User (browser) ─────────►│  React web app (Vite)                    │
+  • CV read locally      │  matching, scenarios, pathway, SDG tags  │
+                         └───────────────┬──────────────────────────┘
+                                         │ /api (same origin)
+                         ┌───────────────▼──────────────────────────┐
+                         │  Express API (Node.js 24) on Replit       │
+                         │  Clerk auth · REST routes · 6 h cache     │
+                         └──┬──────────┬───────────┬──────────┬─────┘
+                            │          │           │          │
+                 PostgreSQL ◄┘  Himalayas API ◄─┘  Clerk ◄──┘  Gemini / Claude
+               (Drizzle ORM)   (live job postings) (sign-in)   (optional Help chat)
+```
+
+The CV is parsed in the browser, and only the skills and interests the user keeps are sent to the server. In development, Vite serves the web app on port 8080 and proxies `/api` to the API on port 3001. In deployment, a single Node process serves both the built web app and `/api` on port 8080.
+
+### Main API Routes
+
+| Area        | Routes                                                                                   |
+| ----------- | ---------------------------------------------------------------------------------------- |
+| Health      | `GET /api/healthz`                                                                       |
+| Signals     | `GET /api/trends`, `GET /api/vacancies`, `GET /api/market/himalayas`                     |
+| Workspace   | `GET/DELETE /api/workspace`, `PUT /api/profile`, `PUT /api/progress/:stepKey`, `PUT /api/goal` |
+| Company     | `/api/org/*` — registration, join codes, teams, skill gaps, training recommendations, sample data |
+| Teams       | `/api/teams/*`, `/api/invitations/*` — learning teams and email invitations              |
+| Help chat   | `POST /api/support/chat`                                                                 |
+
+---
+
+## How to Run
+
+**Requirements:** Node.js 24, pnpm, PostgreSQL and a free [Clerk](https://dashboard.clerk.com) application with **Email address + Password** sign-in enabled.
+
+### Option 1 — Run on Replit (Recommended)
+
+1. Open the [Replit Project](https://replit.com/@your-username/your-project), or import this repository via **Create Repl → Import from GitHub**. Replit reads `.replit` and selects Node.js 24 and PostgreSQL 16.
+2. Open **Tools → PostgreSQL** and create the database. Replit adds `DATABASE_URL` to Secrets automatically.
+3. Open the **Secrets** tab (🔒) and add the variables listed in `.env.example`:
+   - `CLERK_SECRET_KEY` — required (`sk_test_...`)
+   - `CLERK_PUBLISHABLE_KEY` — required (`pk_test_...`, the web app reuses it)
+   - `HIMALAYAS_API_KEY` — optional, raises the job-feed rate limit
+   - `GEMINI_API_KEY` or `ANTHROPIC_API_KEY` — optional, enables the AI Help chat
+   - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM` — optional, emails team invitations
+4. Click **Run**. `scripts/replit-dev.sh` installs packages, creates the database tables and starts the API and web app. The first start takes about a minute.
+5. To deploy, choose **Deploy → Autoscale**. The build and run scripts are already set in `.replit`. Add the same Secrets to the deployment.
+
+See [`REPLIT_SETUP.md`](REPLIT_SETUP.md) for details, including Clerk live keys on a `*.replit.app` domain.
+
+### Option 2 — Run Locally
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/your-username/your-project.git
+cd your-project
+
+# 2. Install dependencies (pnpm only)
 pnpm install --frozen-lockfile
-pnpm run typecheck
-```
 
-To create tables in a NEW, empty development database after configuring
-`DATABASE_URL`:
+# 3. Configure environment variables
+cp .env.example .env            # then fill in DATABASE_URL and Clerk keys
+set -a; source .env; set +a
 
-```sh
+# 4. Create the database tables
 pnpm --filter @workspace/db run push
+
+# 5. Terminal 1 — start the API on :8080
+cd artifacts/api-server && pnpm run build && PORT=8080 node --enable-source-maps ./dist/index.mjs
+
+# 6. Terminal 2 — start the web app on :5173 (proxies /api to :8080)
+cd artifacts/future-ready-workforce && set -a; source ../../.env; set +a && PORT=5173 BASE_PATH=/ pnpm run dev
 ```
 
-Review schema changes before applying them to a populated database. The archive
-contains table definitions, not user records or database backups.
+Open http://localhost:5173. Create a personal account at `/sign-up`, or register a company at `/register-company`.
 
-## Help chat (AI support box)
+> On Windows, run these commands in Git Bash or WSL. For a quick PostgreSQL database, use Docker, or a hosted service such as Neon or Supabase (see [`LOCAL_SETUP.md`](LOCAL_SETUP.md)).
 
-A round **Help** button sits at the bottom-right of every page (before and after sign-in, personal and administrator). It opens a chat
-for people who hit a problem or are unsure what to do. Code: `src/components/support-chat.tsx` (UI), `api-server/src/routes/support.ts`
-(`POST /api/support/chat`), `api-server/src/lib/support-faq.ts` (product facts and built-in answers).
-- **Free option:** set `GEMINI_API_KEY` (Google AI Studio, free tier, no card) and Google Gemini answers instead (model `GEMINI_MODEL`, default
-  `gemini-flash-latest`) with Google Search grounding. Free-tier limits are set by Google and shown in AI Studio; Google may use free-tier
-  content to improve its products, so avoid it for confidential use or switch to a paid key. If both keys are set, Claude is used unless
-  `AI_PROVIDER=gemini`. The rest of this section describes the Claude option, which behaves the same way.
-- With `ANTHROPIC_API_KEY` set on the server, Claude answers **any** question (Nexora help, careers, study, writing, coding, general
-  knowledge, casual chat) and can **search the web** (Anthropic's built-in web search tool, up to 3 searches per answer) for anything
-  current: news, prices, job-market figures. Answers show their source links under the message. Model: `ANTHROPIC_MODEL`
-  (default `claude-haiku-5-5`). Web search must be allowed for your organisation in the Anthropic Console (Settings > Privacy); if it is
-  not, or if you set `AI_WEB_SEARCH=off`, the assistant answers without searching. Searches and long answers cost more than plain
-  replies, so watch your Console usage. For Nexora questions it relies on the product facts and says when it is not sure; it never asks
-  for passwords and gives general information only for medical, legal and financial matters. Without the key, or if the AI service is
-  unreachable, it only gives built-in quick answers about using Nexora (English, Bahasa Malaysia, Chinese) and says the AI assistant is
-  not connected. There is no AI without the key.
-- It replies in the language chosen in the app (the administrator workspace and the personal workspace each keep their own choice).
-- Privacy: only the typed messages (last 12), the page name, account kind and language are sent. No profile, CV, skills or company data.
-  Nothing is stored or logged; the conversation disappears on reload. Limit: 30 messages per person (or IP) per hour per server instance.
-- The AI cannot see or change accounts, and is not a substitute for the company administrator. The crash screen has an "Ask for help" button too.
+### Run Tests
 
-## Run on Replit
-
-See **REPLIT_SETUP.md** for the Repl setup (`.replit`, Secrets, Run, Autoscale deployment). One port serves the site and `/api`.
-
-## Run in the existing Replit routing environment (Agent artifacts)
-
-Service configuration is preserved in each app's `.replit-artifact/artifact.toml`.
-The web app is mounted at `/` and the API is mounted at `/api`.
-
-The configured service commands are:
-
-```sh
-pnpm --filter @workspace/api-server run dev
-pnpm --filter @workspace/future-ready-workforce run dev
+```bash
+pnpm run typecheck                                        # type-check all packages
+pnpm --filter @workspace/future-ready-workforce run test  # web app unit tests
+pnpm --filter @workspace/api-server run test              # API unit tests
+pnpm --filter @workspace/api-server run test:integration  # API integration tests
 ```
 
-The service environment supplies `PORT`; the frontend also requires
-`BASE_PATH=/`. Authentication and database services must be configured separately
-in a different project.
+---
 
-## Running outside Replit
+## How We Use Replit *(Required)*
 
-The source retains its existing routing configuration; this is not a newly
-verified standalone deployment template. Supply `PORT` for each service and
-`BASE_PATH=/` for Vite. Configure a same-origin reverse proxy that routes `/api`
-to the API service and all other paths to the frontend. For local development,
-a Vite `server.proxy` entry for `/api` can provide that routing.
+- **Development:** Nexora was built in a Replit pnpm workspace. `.replit` selects Node.js 24 and PostgreSQL 16, and the **Run** button starts `scripts/replit-dev.sh`, which runs the API and the Vite web app together on one preview port.
+- **Database:** Replit's built-in PostgreSQL stores learner profiles, learning progress, career goals, companies, teams and invitations. Tables are created or updated automatically on every Run and deployment build.
+- **Hosting:** The app is deployed with **Replit Autoscale Deployments** at the Live Demo link above. `scripts/replit-build.sh` builds the web app and API, and `scripts/replit-start.sh` serves both from one Node process.
+- **Secrets:** Clerk keys, the database URL and optional API keys (Himalayas, Gemini/Claude, SMTP) are stored in Replit Secrets, never in the code.
+- **Credits:** Development and deployment use the SDC sponsor-provided Replit promotional credits.
 
-Use Clerk keys and permitted origins appropriate to the new host. Production
-build and routing instructions are in the artifact manifests. Do not reuse the
-original project's identity keys or assume its users will migrate automatically.
+📄 Proof of use: https://drive.google.com/file/d/1zFw_-PBCefOb1V0EW6Wsr1Q1WM_R6Qkw/view?usp=sharing
 
-## Excluded
 
-Installed dependencies, compiled output, caches, Git history, chat/history files,
-uploaded reference documents, database records, local environment files, and the
-unrelated mockup sandbox are intentionally excluded.
+---
 
-The source includes the current navy/indigo theme, Inter and JetBrains Mono
-typography, Nexora branding, private accounts, persisted learning progress, and
-account-owned team planning.
+## Challenges & Learnings
 
-## Himalayas job postings (vacancies, skill signals and market page)
+- **Getting updatable trend data without hard-coded lists.** Himalayas postings have categories, not a skills list, so we built a skill-alias dictionary that matches skills from categories, job titles and summaries, and ignores ambiguous words (such as "go" or "data") in free text. We cache results for 6 hours and serve the last good snapshot if the API fails.
+- **Stopping the AI from inventing jobs, courses or statistics.** We kept matching, scoring, scenarios and pathways as transparent rule-based calculations, with every signal showing its source and date. The language model is limited to the optional Help chat.
+- **Showing uncertainty honestly.** Instead of one prediction, we re-rank the same profile under five future scenarios and label all scores, BLS-based risk arrows and SDG tags as estimates or associations.
+- **Privacy and fairness.** CVs are read in the browser and never uploaded. Name, age, gender and background are never used for matching, and employees must opt in before their company administrator can see their skills.
+- **Authentication on Replit.** Clerk live keys on a `*.replit.app` domain needed Clerk's proxy, so the server enables it automatically for live keys.
+- **Learning:** We learned to design a full-stack TypeScript monorepo with an OpenAPI contract, generated clients and server-side authorisation, and to build for transparency and human control rather than black-box recommendations.
 
-Vacancy matching on the Discover page and the skill signals on the Overview/Signals pages read public remote postings
-from the [Himalayas remote-jobs API](https://himalayas.app/docs/remote-jobs-api) through the server
-(`artifacts/api-server/src/lib/himalayas.ts`). The API key is optional but gives higher rate limits. Set it **on the
-server only**, never in browser code, source control or logs:
+## Future Improvements
 
-```
-HIMALAYAS_API_KEY=hml_...your key...
-```
+- [ ] Read PDF CVs in the browser (currently .docx, .txt and .md only).
+- [ ] Integrate RunPod for GPU-hosted model inference.
+- [ ] Add more updatable trend sources (news or research feeds, Malaysian job-market data) and automatic re-planning when signals change.
+- [ ] Extend SDG mapping to every role and skill, with a person, company and regional SDG contribution view.
+- [ ] Translate personal and sign-in pages into Bahasa Malaysia and Chinese, with native-speaker review.
+- [ ] Add HRD Corp-claimable programmes to the training catalogue.
+- [ ] Verify company registration numbers against an official registry such as SSM.
+- [ ] Add the `/api/org/*` and `/api/teams/*` routes to the OpenAPI spec and generated client.
+- [ ] Add automated fairness checks on recommendations.
 
-- Himalayas refreshes its data every 24 hours, so results are cached for 6 hours (one refresh is about 10 requests; the
-  limit with a key is 60 per minute and 10,000 per day). If Himalayas fails, the last snapshot is served.
-- The Market signals page (`/api/market/himalayas`) summarises the same cached sample, so it makes no extra API calls. Adzuna is no longer used.
-- Himalayas jobs have categories, not a skills list, so skills are matched from categories, titles and excerpts.
-- Terms of the API: the app shows a visible Himalayas credit with a link to himalayas.app, every apply button uses the
-  job's `applicationLink`, and jobs must not be redistributed to other job boards.
+## Team
 
-## Company workspace (administrator accounts)
+| Name           | Role                | GitHub                                   |
+| -------------- | ------------------- | ---------------------------------------- |
+| Chang Zhi Qing | Team Lead / Backend | Zhi-Qing-6272                            |
+| Chai Xiu Yi    | Frontend            | chaixiuyi7-dev                           |
 
-Companies **register** with real details; nothing is pre-filled and there is no demo data.
+---
 
-1. The administrator creates a sign-in at `/register-company` (Clerk: email + password; the password lives only with Clerk).
-2. They then complete the registration form on the **Company** page: company name, **company registration number**,
-   **business licence number**, industry, size, registered address, contact name/email/phone, optional website, and two
-   required confirmations (authorised to register; employee data used only for training planning).
-3. They become the company administrator and receive a join code for employees. The **Company details** tab lets them
-   update everything except the legal name and registration number. Administrators have **Sign out** and
-   **Account & password** buttons in the dashboard header.
+## Submission Checklist
 
-Registration and licence numbers are checked for **format and uniqueness only** (one company per registration number); they
-are not verified against an official registry such as SSM. If you need real verification, add a review step or a registry API.
+- [x] Team name, domain (Domain 1 / Domain 2) and SDG track filled in
+- [x] Slide deck link added
+- [x] Demo video link added
+- [x] Replit used, with proof of use in `submission/`
+- [ ] RunPod used, with proof of use in `submission/`
+- [x] Preliminary submission completed (`SDC2026_DuoLogic_Preliminary.pdf`)
+- [x] Technology declaration completed (`SDC2026_DuoLogic_TechDeclaration.pdf`)
+- [x] Submission files renamed with your team name (replace `TeamName`)
+- [x] "How to Run" steps verified
+- [x] No API keys or secrets committed to the repository
 
-**Database:** this adds four tables (`organizations`, `org_members`, `org_teams`, `org_recommendations`). If you already ran
-an earlier version of this feature, `organizations` gained required columns, so run `pnpm --filter @workspace/db run push`
-and accept its prompts (on a database with no real companies it is safe to let it recreate that table).
+## License
 
-Set in Clerk: enable email + password, require a strong password and email verification for production.
-
-- Employees choose whether their administrator can see them. Sharing is off by default and can be switched off at any time.
-- When sharing is on the administrator sees only: name, current role, skills, chosen direction and learning-step counts.
-  Never interests, experience notes or CV text (CVs are read in the browser and are not uploaded).
-- Administrators define teams and the skills each team needs, see skill gaps for employees who share, and recommend training
-  for a team or the whole company. Employees mark recommended training complete from their Company page.
-- Authorisation is enforced on the server (`artifacts/api-server/src/routes/org.ts`): the company and role come from the
-  signed-in user's membership row, never from the request. Join codes are rate limited and can be rotated.
-- Deleting a workspace removes the person from their company; if the last administrator leaves, the company and its data are removed.
-- These `/api/org/*` routes are plain Express routes and are not yet part of the OpenAPI spec / generated client.
-
-## Forgot password
-
-Both sign-in pages (personal and company) show a **Forgot your password?** link (`/forgot-password`, `/company-forgot-password`).
-Steps: enter the account email, then Clerk emails a 6-digit verification code (Gmail or any inbox), enter the code, then choose a new
-password; the person is signed in afterwards (company administrators land in the company workspace). The code can be re-sent after 30
-seconds. An unknown email gets the same screens as a known one, so the page does not reveal which emails have accounts.
-Requirements: Clerk with Email + Password enabled and **Email verification code** on. No SMTP is needed for this; SMTP is only for team invitations.
-In the downloadable preview file the code is shown in a "Preview mailbox" box because it cannot send email.
-
-## Company sign-in and learning teams
-
-**Two kinds of account.** The sign-in and sign-up pages each offer both: *Personal sign in / Create personal account* (employees and
-learners; a personal account can only **join** a company with a join code) and *Company sign in / Register a company*. A
-company account is created from `/register-company` (the sign-up form records `unsafeMetadata.accountType = "company"` in Clerk);
-only company accounts see the register-company form, and `POST /api/org` returns 403 for personal accounts. This marks the
-*intent* chosen at sign-up; it is not a hard security boundary (a Clerk user can edit their own unsafe metadata), so add a
-review step if you need real vetting. A company registration is also checked for format and uniqueness only, as above.
-Accounts that registered a company before this change keep working; a personal account that wants to register a company
-must create a separate company account (another email).
-
-**Registering a company** is one page with two steps at `/register-company` ("Register a company" tab on the sign-up page):
-1) the company details (name, registration number, business licence number, industry, size, address, contact, two confirmations),
-2) create the administrator sign-in (email prefilled from the contact email). The details are held in that browser tab only
-(`sessionStorage`) and are sent to the server automatically right after the account exists; if the server rejects them (for
-example the registration number is already registered) the same form opens inside the workspace, prefilled, with the error.
-Remember that email and password: they are the company login. Later, **Company sign in** (`/company-sign-in`) takes the
-administrator straight to their company dashboard, and a normal sign-in with the same account also opens the company first.
-Employees never register the company again: they join with the join code.
-
-**Administrator workspace.** When a company administrator signs in they get their own menu and pages instead of the personal ones:
-Overview, Skill gaps, Teams, Training, Employees and Company details (`components/admin-shell.tsx`, pages in `components/admin-pages.tsx`).
-Discover, Market signals, Learning pathway, My profile and Team view are for personal accounts only. Removing the company
-and its data is under Company details.
-
-**Languages (administrator).** The administrator workspace is available in **English, Bahasa Malaysia and Chinese (Simplified)**.
-Use the language selector in the top bar; the choice is remembered in that browser (`localStorage`, key `nexora-admin-language`).
-Menu, page text, table headings, buttons, confirmations, plurals, skill / role / industry names and the test teams' names and job
-titles are translated. All translations live in one file, `src/lib/admin-dict.ts` (English text -> [Bahasa Malaysia, Chinese]);
-a missing entry falls back to English, and to add a language or fix a phrase you only edit that file (plus `Lang`/`LANGS` in
-`src/lib/admin-i18n.ts`). Not translated: the sign-in / registration pages, member (employee) pages, server error messages,
-anything people typed (company, team and employee names, notes), and course titles and provider search terms, which stay English
-because the providers' catalogues are English. The Bahasa Malaysia and Chinese wording was written by Claude, not a professional
-translator: have a native speaker review it before relying on it.
-
-**Skill gaps, test data and training (administrator).**
-- *Skill gaps* ranks every team from the biggest gap (rank 1) to the smallest. Coverage = required skills present ÷ required skills,
-  counted across the team's sharing employees; equal coverage shares a rank. A team-by-skill matrix compares teams side by side;
-  teams with no sharing employees or no required skills are listed as "not ranked". Self-reported skills, for planning only.
-- *Test data*: **Load test data** (Overview, Teams, Employees or Skill gaps when empty) adds **30 synthetic employees in 10 synthetic
-  teams** (`api-server/src/lib/synthetic-data.ts`, invented names,). Remove them under Company details.
-  `POST/DELETE /api/org/admin/sample-data` are administrator-only; real employees and teams are never touched. Run
-  `pnpm --filter @workspace/db run push` once: `org_teams` gained a `synthetic` column (safe, defaults to false).
-- *Training* → **Find online training**: choose a team (starts from its skill gaps and most common target role), a role and skills,
-  or type any topic. Nexora shows hand-picked starting points (`src/lib/training-catalog.ts`: Google/Coursera certificates, Kaggle,
-  CS50, freeCodeCamp, AWS, Microsoft Learn, HubSpot Academy, etc.) and links that open each provider's own search results
-  (Coursera, edX, Udemy, LinkedIn Learning, FutureLearn, Class Central, YouTube). It does **not** call a course-search API,
-  scrape sites or rank results; featured links are suggestions to re-check. A chosen course is stored with its link in the
-  recommendation note and shown to employees.
-
-**Learning teams (reskill together).** In **Team view** a person must first **create a team**; only then can they invite people.
-
-- An invitation is addressed to an email address. The invited person is **not** a member yet (shown as *Pending*).
-- They are added only when they click **Accept**, either in their own Team view or on the invitation link
-  (`/invite/<token>`), signed in with the invited email address. Declining, expiry (7 days) and cancelling add nobody.
-- Server rules (`artifacts/api-server/src/routes/teams.ts`): the link token is stored only as a SHA-256 hash; accepting
-  needs a **verified** email on the Clerk account that matches the invitation; the owner sees only a member's name, current
-  role, skills and chosen direction (never interests, experience notes or CV text); a member can leave at any time.
-- **Email sending:** set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM` and `APP_BASE_URL` (see `.env.example`).
-  With no SMTP settings the invitation is still created and the inviter is shown the private link to send themselves.
-- **Database:** adds `learning_teams`, `learning_team_members`, `team_invitations`; run `pnpm --filter @workspace/db run push`.
-  New dependency `nodemailer`: run `pnpm install`.
-- The new Team view / invitation wording is English only for now.
-
-## Progress, levels and badges
-
-The Pathway page shows a progress bar for the chosen direction, a level with an XP bar and ten badges; the Overview page
-shows a summary card. Everything is derived from existing progress data (`src/lib/achievements.ts`). Badges are remembered
-in the browser's local storage so they stay earned on that device; they are for motivation only, not a qualification.
+This project is licensed under the [Apache License 2.0](LICENSE).
