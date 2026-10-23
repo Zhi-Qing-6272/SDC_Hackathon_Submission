@@ -19,7 +19,7 @@ AI-powered career readiness and reskilling platform serves working adults, fresh
 | Replit Project          | https://replit.com/join#t=inoewpmevfsjwth-changzhiqing                             |
 | Live Demo               | https://nexora-2.replit.app                                                        |
 | Slide Deck              | https://drive.google.com/file/d/10GpeyZjiWhJtuaKFY4sX5kzkKWYsbB0N/view?usp=sharing |
-| Demo video              | https://drive.google.com/file/d/14MxRmiT_b_UvTodiI9tlUXELJWNxBOWS/view?usp=sharing |
+| Demo video              | https://youtu.be/6ILReXxpRDg                                                       |
 
 
 # Nexora — source code
