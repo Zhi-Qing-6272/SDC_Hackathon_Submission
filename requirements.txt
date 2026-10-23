@@ -1,0 +1,94 @@
+NEXORA — FEATURE REQUIREMENTS
+
+PURPOSE
+Build a future-career matching and reskilling platform that assesses a learner's
+skills, incorporates updateable AI and labour-market signals, recommends suitable
+future roles, and presents actionable learning paths and uncertainty scenarios.
+
+============================================================
+A. MUST-HAVE FEATURES (REQUIRED)
+============================================================
+
+FR-01: SKILLS PROFILE INTAKE
+- Allow users to provide their current skills and potential using at least one
+  of these methods: CV/resume upload, form, or guided questionnaire.
+- Extract or collect skills and display an editable skills profile.
+- Use the skills profile as input to role recommendations and gap analysis.
+Acceptance: A user can submit skills information, review their captured skills,
+  and use it to generate recommendations.
+
+FR-02: AI-TREND SIGNAL LAYER
+- Integrate at least ONE updateable EXTERNAL source of AI and job-market trends.
+  Examples: public job-posting datasets, news/research feeds, open datasets.
+- Store or retrieve source information and its update/publication date.
+- Show the source name/link and date alongside trend insights.
+- A hard-coded list of jobs alone does NOT meet this requirement.
+Acceptance: The application demonstrably uses one refreshable external source,
+  and users can see the source and relevant date.
+
+FR-03: FUTURE-ROLE MATCHING
+- Recommend and RANK suitable future career roles based on the user's profile
+  and AI/job-market trend signals.
+- Show an EXPLAINABLE match score for each recommended role.
+- Show the SKILLS GAP for each role (skills already present vs. skills missing
+  or needing improvement).
+Acceptance: The user sees a ranked role list, a comprehensible score/explanation,
+  and skill gaps for each role.
+
+FR-04: PERSONALISED RESKILLING PATHWAY
+- Generate a PERSONALISED, ORDERED learning plan for the selected target role.
+- Include an estimated duration/time for each learning step.
+- Recommend FREE or LOW-COST resources, such as online courses and HRD Corp
+  claimable programmes (where applicable).
+- Link learning steps to the user's specific skills gaps.
+Acceptance: A user can see what to learn first, why, how long each step should
+  take, and where to learn it affordably.
+
+FR-05: SDG MAPPING
+- Tag EACH recommended role and skill to at least one United Nations
+  Sustainable Development Goal (SDG).
+- Explain how the selected user's career path and learning goals contribute
+  to those SDGs.
+Acceptance: A user can view SDG tags and a clear explanation for both roles
+  and skills/pathway contributions.
+
+FR-06: HANDLING UNCERTAINTY
+- Present MORE THAN ONE plausible future scenario (for example, moderate AI
+  adoption versus fast AI disruption).
+- Show how the scenario may affect roles, demand, matching, or learning priorities.
+- Clearly label forecasts, risk levels and projections as ESTIMATES, not facts
+  or guarantees; avoid presenting a single certain prediction.
+Acceptance: A user can compare at least two scenarios and sees a visible
+  uncertainty/estimates disclaimer.
+
+============================================================
+B. GOOD-TO-HAVE FEATURES (OPTIONAL)
+Not separately required or scored; may strengthen Innovation & Creativity
+or Problem–Solution Fit.
+============================================================
+
+OPT-01: EMPLOYER / HR VIEW
+- Provide workforce-level skills-gap heatmaps and reskilling recommendations
+  for a team or organisation.
+
+OPT-02: AUTOMATIC RE-PLANNING
+- Refresh or adjust role recommendations and learning plans when new AI-trend
+  or labour-market data becomes available.
+
+OPT-03: INCLUSIVE DESIGN
+- Offer multilingual support (English, Bahasa Malaysia, Chinese).
+- Support a lightweight, mobile-friendly, low-bandwidth experience.
+
+OPT-04: LEARNER MOTIVATION
+- Track learning progress and completion.
+- Support skill badges or similar recognition/incentives.
+
+OPT-05: FAIRNESS CHECKS
+- Review recommendations for potential discrimination or biased outcomes
+  related to age, gender, or background.
+- Avoid basing suitability rankings on protected characteristics.
+
+OPT-06: SDG CONTRIBUTION VIEW
+- Aggregate and visualise SDG contributions for an individual, company,
+  or region.
+
