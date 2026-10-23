@@ -13,9 +13,9 @@ AI-powered career readiness and reskilling platform serves working adults, fresh
 |**Number of Members**   |2                                                                                            |
 
 ## Links
-| Resource                | Links                                                                    |
-|-------------------------|--------------------------------------------------------------------------|
-| GitHub Repository       |
+| Resource                | Links                                                                              |
+|-------------------------|------------------------------------------------------------------------------------|
+| GitHub Repository       | https://github.com/Zhi-Qing-6272/SDC_Hackathon_Submission                          |
 | Replit Project          | https://replit.com/join#t=inoewpmevfsjwth-changzhiqing                             |
 | Live Demo               | https://nexora-2.replit.app                                                        |
 | Slide Deck              | https://drive.google.com/file/d/10GpeyZjiWhJtuaKFY4sX5kzkKWYsbB0N/view?usp=sharing |
