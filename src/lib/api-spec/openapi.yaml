@@ -1,0 +1,298 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: trends
+    description: Public job-market trend signals
+paths:
+  /workspace:
+    get:
+      operationId: getWorkspace
+      summary: Read the signed-in user's private workspace
+      responses:
+        "200":
+          description: Workspace
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Workspace"
+        "401":
+          description: Sign-in required
+    delete:
+      operationId: deleteWorkspace
+      summary: Delete the signed-in user's profile, progress and team records
+      responses:
+        "204":
+          description: Workspace data deleted
+  /profile:
+    put:
+      operationId: saveLearnerProfile
+      summary: Save the signed-in user's skills profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LearnerProfileInput"
+      responses:
+        "200":
+          description: Saved profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LearnerProfileInput"
+  /progress/{stepKey}:
+    put:
+      operationId: saveLearningProgress
+      summary: Set completion of a learning step for the current user
+      parameters:
+        - name: stepKey
+          in: path
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LearningProgressInput"
+      responses:
+        "200":
+          description: Saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LearningProgressInput"
+  /goal:
+    put:
+      operationId: saveCareerGoal
+      summary: Save the current user's chosen career direction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CareerGoalInput"
+      responses:
+        "200":
+          description: Saved goal
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CareerGoalInput"
+  /team-members:
+    get:
+      operationId: listTeamMembers
+      summary: List only the current user's managed team records
+      responses:
+        "200":
+          description: Team members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TeamMember"
+    post:
+      operationId: createTeamMember
+      summary: Add a team member to the current user's private workspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TeamMemberInput"
+      responses:
+        "201":
+          description: Created member
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeamMember"
+  /team-members/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+    put:
+      operationId: updateTeamMember
+      summary: Update an owned team member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TeamMemberInput"
+      responses:
+        "200":
+          description: Updated member
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeamMember"
+    delete:
+      operationId: deleteTeamMember
+      summary: Delete an owned team member
+      responses:
+        "204":
+          description: Member deleted
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /trends:
+    get:
+      operationId: getTrendSignals
+      tags: [trends]
+      summary: Fetch current public job-market signals
+      description: Aggregates Himalayas job-posting categories and keywords into an updatable skills signal snapshot.
+      parameters:
+        - name: refresh
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Bypass the short-lived server cache and fetch a new source snapshot.
+      responses:
+        "200":
+          description: Current signal snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrendSignalSnapshot"
+        "503":
+          description: The public signal source is temporarily unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrendSourceError"
+components:
+  schemas:
+    LearnerProfileInput:
+      type: object
+      required: [name, currentRole, experience, skills, interests]
+      properties:
+        name: {type: string, minLength: 1, maxLength: 100}
+        currentRole: {type: string, maxLength: 150}
+        experience: {type: string, maxLength: 100}
+        skills:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items: {type: string, minLength: 1, maxLength: 100}
+        interests:
+          type: array
+          maxItems: 100
+          items: {type: string, minLength: 1, maxLength: 100}
+    Workspace:
+      type: object
+      required: [profile, completedKeys, goalRoleId]
+      properties:
+        profile:
+          anyOf:
+            - $ref: "#/components/schemas/LearnerProfileInput"
+            - type: "null"
+        completedKeys:
+          type: array
+          items: {type: string}
+        goalRoleId:
+          type: ["string", "null"]
+    LearningProgressInput:
+      type: object
+      required: [completed]
+      properties:
+        completed: {type: boolean}
+    CareerGoalInput:
+      type: object
+      required: [roleId]
+      properties:
+        roleId: {type: string, enum: [analyst, success, ops, learning, product]}
+    TeamMemberInput:
+      type: object
+      required: [name, currentRole, skills, targetRoleId, weeklyHours]
+      properties:
+        name: {type: string, minLength: 1, maxLength: 100}
+        currentRole: {type: string, maxLength: 150}
+        skills:
+          type: array
+          maxItems: 100
+          items: {type: string, minLength: 1, maxLength: 100}
+        targetRoleId: {type: string, enum: [analyst, success, ops, learning, product]}
+        weeklyHours: {type: integer, minimum: 1, maximum: 40}
+    TeamMember:
+      allOf:
+        - $ref: "#/components/schemas/TeamMemberInput"
+        - type: object
+          required: [id]
+          properties:
+            id: {type: string, format: uuid}
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    TrendSignalSnapshot:
+      type: object
+      required: [sourceName, sourceUrl, sourceApiUrl, fetchedAt, sourceUpdatedAt, postingCount, signals]
+      properties:
+        sourceName:
+          type: string
+        sourceUrl:
+          type: string
+          format: uri
+        sourceApiUrl:
+          type: string
+          format: uri
+        fetchedAt:
+          type: string
+          format: date-time
+        sourceUpdatedAt:
+          type: ["string", "null"]
+          format: date-time
+        postingCount:
+          type: integer
+          minimum: 0
+        signals:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrendSignal"
+    TrendSignal:
+      type: object
+      required: [skill, count, share]
+      properties:
+        skill:
+          type: string
+        count:
+          type: integer
+          minimum: 0
+        share:
+          type: number
+          minimum: 0
+          maximum: 1
+    TrendSourceError:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+
